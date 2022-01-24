@@ -2,7 +2,7 @@ import hoshino
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 
-sv = Service('合刀', manage_priv=priv.SUPERUSER, help_='请输入：合刀 刀1伤害 刀2伤害 剩余血量\n如：合刀 50 60 70\n')
+sv = Service('合刀', manage_priv=priv.SUPERUSER, help_='请输入：合刀 刀1伤害(【伤害等于剩余血量时】剩余秒数) 刀2伤害(【伤害等于剩余血量时】剩余秒数) 剩余血量\n如：“合刀 50 60 70” 或\n“合刀 50(0) 70(34) 70”')
 
 
 @sv.on_prefix('合刀')
