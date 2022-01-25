@@ -2,7 +2,7 @@ import hoshino
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 
-helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必需）\n如：“一穿二 34 2000” 或\n“一穿二 34 2000 52”'
+helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必需）\n如：“一穿二 34 2000”或“一穿二 34 2000 52”'
 sv = Service('一穿二', manage_priv=priv.SUPERUSER, help_=helpText)
 
 def calc(x:float, y:float, *args:float) -> float:
@@ -17,14 +17,14 @@ async def feedback(bot, ev: CQEvent):
     cmd = ev.raw_message
     content = cmd.split()
     lenC = len(content)
-    if lenC != 4 or lenC != 3:
-        await bot.send(ev, helpText)
+    if lenC != 4 and lenC != 3:
+        await bot.send(ev, helpText + '\n错误0')
         return
     try:
         c1 = float(content[1])
         c2 = float(content[2])
     except:
-        await bot.send(ev, helpText)
+        await bot.send(ev, helpText + '\n错误1')
         return
     if c1 <= 0 or c2 <= 0 or c1 >= 90:
         await bot.send(ev, '输入数字错误。')
@@ -35,7 +35,7 @@ async def feedback(bot, ev: CQEvent):
         try:
             c3 = float(content[3])
         except:
-            await bot.send(ev, helpText)
+            await bot.send(ev, helpText + '\n错误2')
             return
         if not (c3 >= (c1+20) and c3 <= 90):
             await bot.send(ev, '目标补偿时间错误，必须不小于剩余时间+20s且不大于90s。')
