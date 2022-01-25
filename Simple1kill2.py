@@ -34,6 +34,7 @@ async def feedback(bot, ev: CQEvent):
         return
     if lenC == 3:
         result = calc(c1, c2)
+        needs = c2 - result
     elif lenC == 4:
         try:
             c3 = float(content[3])
@@ -44,5 +45,6 @@ async def feedback(bot, ev: CQEvent):
             await bot.send(ev, '目标补偿时间错误，必须不小于剩余时间+20s且不大于90s。')
             return
         result = calc(c1, c2, c3)
-    reply = '若需完成一穿二，需使当前BOSS血量降至{:.2f}以下。'.format(result)
+        needs = c2 - result
+    reply = '若要按需求完成一穿二，应至少填{:.2f}伤害，使当前BOSS血量降至{:.2f}以下。'.format(needs, result)
     await bot.send(ev, reply)
