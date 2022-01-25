@@ -8,7 +8,7 @@ sv = Service('一穿二', manage_priv=priv.SUPERUSER, help_=helpText)
 def calc(x:float, y:float, *args:float) -> float:
     '''
     PCR补偿进位采用进一法
-    补偿时间 = 固定补偿（国服目前为20s）+（90-BOSS当前血量/实际造成伤害（最高为当前血量）*造成伤害的时间
+    补偿时间 = 固定补偿（国服目前为20s）+（90-（BOSS当前血量/实际造成伤害（最高为当前血量））*造成伤害的时间）
     '''
     if len(args) == 0:
         return float((y/(90-x))*(20+x+1))
