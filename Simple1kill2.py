@@ -2,51 +2,44 @@ import hoshino
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 
-sv = Service('合刀', manage_priv=priv.SUPERUSER, help_='请输入：合刀 刀1伤害(【伤害等于剩余血量时】剩余秒数) 刀2伤害(【伤害等于剩余血量时】剩余秒数) 剩余血量\n如：“合刀 50 60 70” 或\n“合刀 50(0) 70(34) 70”')
+helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必需）\n如：“一穿二 34 2000” 或\n“一穿二 34 2000 52”'
+sv = Service('一穿二', manage_priv=priv.SUPERUSER, help_=helpText)
+
+def calc(x:float, y:float, *args:float) -> float:
+    if len(args) == 0:
+        return float((y/(90-x))*(20+x))
+    else:
+        return float((y/(90-x))*(110-args[0]))
 
 
-@sv.on_prefix('合刀')
+@sv.on_prefix('一穿二')
 async def feedback(bot, ev: CQEvent):
-    # print(ev)
-    # print(ev.raw_message)
     cmd = ev.raw_message
-    content=cmd.split()
-    # print(cmd)
-    # print(cmd.split())
-    if(len(content)!=4):
-        reply="请输入：合刀 刀1伤害 刀2伤害 剩余血量\n如：合刀 50 60 70\n"
-        await bot.send(ev, reply)
+    content = cmd.split()
+    lenC = len(content)
+    if lenC != 4 or lenC != 3:
+        await bot.send(ev, helpText)
         return
-    d1=float(content[1])
-    d2=float(content[2])
-    rest=float(content[3])
-    if(d1+d2<rest):
-        reply="醒醒！这两刀是打不死boss的\n"
-        await bot.send(ev, reply)
+    try:
+        c1 = float(content[1])
+        c2 = float(content[2])
+    except:
+        await bot.send(ev, helpText)
         return
-    dd1=d1
-    dd2=d2
-    if d1>=rest:
-        dd1=rest
-    if d2>=rest:
-        dd2=rest        
-    res1=(1-(rest-dd1)/dd2)*90+10; # 1先出，2能得到的时间
-    res2=(1-(rest-dd2)/dd1)*90+10; # 2先出，1能得到的时间
-    res1=round(res1,2)
-    res2=round(res2,2)
-    res1=min(res1,90)
-    res2=min(res2,90)
-    res1=str(res1)
-    res2=str(res2)
-    reply=""
-    if(d1>=rest or d2>=rest):
-        reply=reply+"注：\n"
-        if(d1>=rest):
-            reply=reply+"第一刀可直接秒杀boss，伤害按 "+str(rest)+" 计算\n"
-        if(d2>=rest):
-            reply=reply+"第二刀可直接秒杀boss，伤害按 "+str(rest)+" 计算\n"
-    d1=str(d1)
-    d2=str(d2)
-    reply=reply+d1+"先出，另一刀可获得 "+res1+" 秒补偿刀\n"
-    reply=reply+d2+"先出，另一刀可获得 "+res2+" 秒补偿刀\n"
+    if c1 <= 0 or c2 <= 0 or c1 >= 90:
+        await bot.send(ev, '输入数字错误。')
+        return
+    if lenC == 3:
+        result = calc(c1, c2)
+    elif lenC == 4:
+        try:
+            c3 = float(content[3])
+        except:
+            await bot.send(ev, helpText)
+            return
+        if not (c3 >= (c1+20) and c3 <= 90):
+            await bot.send(ev, '目标补偿时间错误，必须不小于剩余时间+20s且不大于90s。')
+            return
+        result = calc(c1, c2, c3)
+    reply = '若需完成一穿二，需使当前BOSS血量降至{:.2f}以下。'.format(result)
     await bot.send(ev, reply)
