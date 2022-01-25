@@ -6,10 +6,14 @@ helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必�
 sv = Service('一穿二', manage_priv=priv.SUPERUSER, help_=helpText)
 
 def calc(x:float, y:float, *args:float) -> float:
+    '''
+    PCR补偿进位采用进一法
+    补偿时间 = 固定补偿（国服目前为20s）+（90-BOSS当前血量/实际造成伤害（最高为当前血量）*造成伤害的时间
+    '''
     if len(args) == 0:
-        return float((y/(90-x))*(20+x))
+        return float((y/(90-x))*(20+x+1))
     else:
-        return float((y/(90-x))*(110-args[0]))
+        return float((y/(90-x))*(110-args[0]+1))
 
 
 @sv.on_prefix('一穿二')
