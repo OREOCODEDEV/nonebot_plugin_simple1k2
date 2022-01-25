@@ -17,8 +17,11 @@ async def feedback(bot, ev: CQEvent):
     cmd = ev.raw_message
     content = cmd.split()
     lenC = len(content)
-    if lenC != 4 and lenC != 3:
+    if lenC != 4 and lenC != 3 and lenC != 1:
         await bot.send(ev, helpText + '\n错误0')
+        return
+    elif lenC == 1:
+        await bot.send(ev, helpText)
         return
     try:
         c1 = float(content[1])
