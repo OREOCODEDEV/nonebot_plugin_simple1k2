@@ -32,6 +32,9 @@ async def feedback(bot, ev: CQEvent):
     if c1 <= 0 or c2 <= 0 or c1 >= 90:
         await bot.send(ev, '输入数字错误。')
         return
+    elif c1 >= 35:
+        await bot.send(ev, '无需填补即可一穿二。')
+        return
     if lenC == 3:
         result = calc(c1, c2)
         needs = c2 - result
