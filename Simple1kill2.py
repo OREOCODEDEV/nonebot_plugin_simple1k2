@@ -2,7 +2,7 @@ import hoshino
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 
-helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必需）\n如：“一穿二 34 2000”或“一穿二 34 2000 52”'
+helpText = '请输入：一穿二 剩余秒数 BOSS血量 目标补偿（非必需）\n如：“一穿二 34 2000”或“一穿二 34 2000 56”'
 sv = Service('一穿二', manage_priv=priv.SUPERUSER, help_=helpText)
 
 def calc(x:float, y:float, *args:float) -> float:
