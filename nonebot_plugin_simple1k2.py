@@ -20,7 +20,8 @@ def calc(x: float, y: float, *args: float) -> float:
 @simple_1k2_matcher.handle()
 async def feedback(command_arg: Message = CommandArg()):
     content = command_arg.extract_plain_text().split()
-    lenC = len(content) + 1
+    content.insert(0, "")
+    lenC = len(content)
     if lenC != 4 and lenC != 3 and lenC != 1:
         await simple_1k2_matcher.finish(helpText + "\n错误0")
     elif lenC == 1:
