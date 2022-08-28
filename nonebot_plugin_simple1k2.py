@@ -19,28 +19,27 @@ def calc(x: float, y: float, *args: float) -> float:
 
 @simple_1k2_matcher.handle()
 async def feedback(command_arg: Message = CommandArg()):
-    content = command_arg.extract_plain_text().split()
-    content.insert(0, "")
-    lenC = len(content)
-    if lenC != 4 and lenC != 3 and lenC != 1:
-        await simple_1k2_matcher.finish(helpText + "\n错误0")
-    elif lenC == 1:
+    command_arg_list = command_arg.extract_plain_text().split()
+    command_arg_length = len(command_arg_list)
+    if command_arg_length == 0:
         await simple_1k2_matcher.finish(helpText)
+    if not 2 <= command_arg_length <= 3:
+        await simple_1k2_matcher.finish(helpText + "\n错误0")
     try:
-        c1 = float(content[1])
-        c2 = float(content[2])
+        c1 = float(command_arg_list[0])
+        c2 = float(command_arg_list[1])
     except:
         await simple_1k2_matcher.finish(helpText + "\n错误1")
     if c1 <= 0 or c2 <= 0 or c1 >= 90:
         await simple_1k2_matcher.finish("输入数字错误")
     elif c1 >= 35:
         await simple_1k2_matcher.finish("无需填补即可一穿二")
-    if lenC == 3:
+    if command_arg_length == 2:
         result = calc(c1, c2)
         needs = c2 - result
-    elif lenC == 4:
+    elif command_arg_length == 3:
         try:
-            c3 = float(content[3])
+            c3 = float(command_arg_list[2])
         except:
             await simple_1k2_matcher.finish(helpText + "\n错误2")
         if not (c3 >= (c1 + 20) and c3 <= 90):
