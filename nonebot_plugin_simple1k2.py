@@ -21,27 +21,27 @@ def calc(x: float, y: float, *args: float) -> float:
 async def feedback(command_arg: Message = CommandArg()):
     command_arg_list = command_arg.extract_plain_text().split()
     command_arg_length = len(command_arg_list)
+    try:
+        command_arg_list = list(map(lambda i: float(i), command_arg_list))
+    except ValueError:
+        await simple_1k2_matcher.finish("参数错误：参数转换至数字时发生错误")
     if command_arg_length == 0:
         await simple_1k2_matcher.finish(helpText)
     if not 2 <= command_arg_length <= 3:
         await simple_1k2_matcher.finish(helpText + "\n错误0")
-    try:
-        c1 = float(command_arg_list[0])
-        c2 = float(command_arg_list[1])
-    except:
-        await simple_1k2_matcher.finish(helpText + "\n错误1")
+
+    c1 = command_arg_list[0]
+    c2 = command_arg_list[1]
+
     if c1 <= 0 or c2 <= 0 or c1 >= 90:
-        await simple_1k2_matcher.finish("输入数字错误")
-    elif c1 >= 35:
+        await simple_1k2_matcher.finish("参数错误：超出范围")
+    if c1 >= 35:
         await simple_1k2_matcher.finish("无需填补即可一穿二")
     if command_arg_length == 2:
         result = calc(c1, c2)
         needs = c2 - result
     elif command_arg_length == 3:
-        try:
-            c3 = float(command_arg_list[2])
-        except:
-            await simple_1k2_matcher.finish(helpText + "\n错误2")
+        c3 = command_arg_list[2]
         if not (c3 >= (c1 + 20) and c3 <= 90):
             await simple_1k2_matcher.finish("目标补偿时间错误，必须不小于剩余时间+20s且不大于90s")
         result = calc(c1, c2, c3)
